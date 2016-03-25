@@ -1,12 +1,14 @@
 package com.baconnumber.model;
 
-public class Vertex {
+public class Vertex implements Comparable<Vertex>{
 	private String name;
 	private String image;
+	private Integer distance;
 	
 	public Vertex () {
 		name = null;
 		image = null;
+		distance = null;
 	}
 	
 	public Vertex (String vName) {
@@ -16,6 +18,11 @@ public class Vertex {
 	public Vertex (String vName, String vImage) {
 		name = vName;
 		image = vImage;
+	}
+	
+	public Vertex (String vName, Integer dist) {
+		name = vName;
+		distance = dist;
 	}
 	
 	public Vertex (Vertex v) {
@@ -36,6 +43,14 @@ public class Vertex {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+	
+	public Integer getDistance() {
+		return distance;
+	}
+
+	public void setDistance(Integer distance) {
+		this.distance = distance;
 	}
 
 	@Override
@@ -69,4 +84,10 @@ public class Vertex {
 	public String toString() {
 		return getName();
 	}
+	
+	@Override
+	public int compareTo(Vertex v) {
+		return this.distance.compareTo(v.distance);
+	}
+	
 }

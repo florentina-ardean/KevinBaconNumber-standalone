@@ -1,6 +1,12 @@
 package com.baconnumber.core;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +18,7 @@ import com.baconnumber.model.Movie;
 import com.baconnumber.model.Vertex;
 
 public class GraphImpl implements Graph {
-	private Map<Vertex, Set<Vertex>> vertexMap;
+	protected Map<Vertex, Set<Vertex>> vertexMap;
 
 	/**
 	 * Create an empty graph with no vertices or edges.
@@ -74,18 +80,23 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public void updateGraphFromDirectory(String directoryName) {
-		File folder = new File("./" + directoryName);
-		
-		File[] listOfFiles = folder.listFiles();
-		
 		int count = 0;
-		for (File file : listOfFiles) {
-			if (file.isFile()) {
+		
+		Path dir = Paths.get("./" + directoryName);
+
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+			for (Path path : stream) {
+				File file = path.toFile();
 				System.out.println("Loaded: " + file.getName());
 				updateGraphFromFile(file);
 				count++;
 			}
+		} catch (IOException | DirectoryIteratorException x) {
+			// IOException can never be thrown by the iteration.
+			// In this snippet, it can only be thrown by newDirectoryStream.
+			System.err.println(x);
 		}
+		
 		System.out.println("Files loaded: " + count);
 	}
 
@@ -100,7 +111,7 @@ public class GraphImpl implements Graph {
 		Set<Vertex> toBeSaved = new HashSet<Vertex>();
 
 		for (Vertex vertex2 : currentNeighbours) {
-			if (vertex2.getName().equals(vertex.getName())) {
+			if (vertex2.equals(vertex)) {
 				continue;
 			} else {
 				// create all connections set
@@ -119,6 +130,8 @@ public class GraphImpl implements Graph {
 		boolean success = false;
 		Vertex foundTarget = null;
 		
+		Integer a = null;
+		
 		Map<Vertex, Integer> DIST = new HashMap<>();
 		Map<Vertex, Vertex> PREV = new HashMap<>();
 
@@ -130,7 +143,7 @@ public class GraphImpl implements Graph {
 			while (Q.size() > 0) {
 				Vertex u = findVertexWithMinDist(Q, DIST);
 
-				if (u.getName().equals(target.getName())) {
+				if (u.equals(target)) {
 					foundTarget = u;
 					success = true;
 				}
@@ -204,7 +217,7 @@ public class GraphImpl implements Graph {
 		for (Vertex v : vSet) {
 			int dist = Integer.MAX_VALUE;
 			
-			if (v.getName().equals(source.getName())) {
+			if (v.equals(source)) {
 				// Distance from source to source is 0
 				dist = 0;
 			}
@@ -225,7 +238,7 @@ public class GraphImpl implements Graph {
 	 */
 	public Iterable<Vertex> adjacentTo(Vertex vertex) {
 		for (Vertex v : vertexMap.keySet()) {
-			if (v.getName().equals(vertex.getName())) {
+			if (v.equals(vertex)) {
 				return vertexMap.get(v);
 			}
 		}
@@ -259,5 +272,5 @@ public class GraphImpl implements Graph {
 
 		return s.toString();
 	}
-
+	
 }

@@ -9,7 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Movie {
 	private Film film;
 	private List<Vertex> cast;
-
+	
+	private static ObjectMapper mapper;
+	
 	public Film getFilm() {
 		return film;
 	}
@@ -33,7 +35,10 @@ public class Movie {
 	
 	public static Movie loadMovieFromFile(File file) {
 		Movie movie = null;
-		ObjectMapper mapper = new ObjectMapper();
+		
+		if (mapper == null) {
+			mapper = new ObjectMapper();
+		}
 		
 		try {
 			movie = mapper.readValue(file, Movie.class);
