@@ -10,20 +10,26 @@ public class BaconNumberServiceImpl implements BaconNumberService {
 	Graph graph = new GraphImpl();
 	
 	@Override
-	public boolean findConnectionToKevinBacon(String actor) {
-		return findConnection("data", "Kevin Bacon", actor);
+	public void loadData(String directoryName) {
+		graph.updateGraphFromDirectory(directoryName);
+		
 	}
 	
 	@Override
-	public boolean findConnection(String directoryName, String firstActor, String secondActor) {
+	public boolean findConnectionToKevinBacon(String actor) {
+		return findConnection("Kevin Bacon", actor);
+	}
+	
+	@Override
+	public boolean findConnection(String firstActor, String secondActor) {
 		boolean foundConnection = false;
 		try {
-			graph.updateGraphFromDirectory(directoryName);
+			
 			System.out.println("\nComputing...");
 			
-			Profiler.Start(1);
+			
 			foundConnection = graph.Dijkstra(new Vertex(firstActor), new Vertex(secondActor));
-			Profiler.End(1, null);
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();

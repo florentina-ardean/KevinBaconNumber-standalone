@@ -80,6 +80,8 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public void updateGraphFromDirectory(String directoryName) {
+		System.out.println("Loading files... " );
+		
 		int count = 0;
 		
 		Path dir = Paths.get("./" + directoryName);
@@ -87,7 +89,7 @@ public class GraphImpl implements Graph {
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
 			for (Path path : stream) {
 				File file = path.toFile();
-				System.out.println("Loaded: " + file.getName());
+//				System.out.println("Loaded: " + file.getName());
 				updateGraphFromFile(file);
 				count++;
 			}
@@ -271,6 +273,12 @@ public class GraphImpl implements Graph {
 		}
 
 		return s.toString();
+	}
+
+	@Override
+	public void updateGraph(Map<Vertex, Set<Vertex>> actorsConnections) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
