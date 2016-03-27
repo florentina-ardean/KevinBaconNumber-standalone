@@ -12,7 +12,8 @@ public class Main {
 			String actor = args[0];
 			Profiler.Start(3);
 			
-			BaconNumberService bns = new BaconNumberServiceGenericImpl();
+			BaconNumberService bns = new BaconNumberServiceImpl();
+			
 			Profiler.Start(1);
 			bns.loadData("data");
 			Profiler.End(1, null);
